@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>El gato invade tu celular</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
+    color: white;
+  }
+
+  #app {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  #status {
+    position: absolute;
+    top: 45%;
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 2px;
+  }
+
+  #title {
+    position: absolute;
+    top: 70px;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    transition: 1s;
+  }
+
+  .cat {
+    position: absolute;
+    font-size: 70px;
+    left: -100px;
+    bottom: 120px;
+    transition: 2s ease;
+    z-index: 5;
+  }
+
+  .sit {
+    transform: translateX(42vw);
+  }
+
+  #notification {
+    position: absolute;
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    width: 85%;
+    max-width: 340px;
+    background: #f4f4f4;
+    color: #111;
+    border-radius: 22px;
+    padding: 18px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(255,255,255,.25);
+    transition: .5s;
+    z-index: 10;
+  }
+
+  #notification.show {
+    transform: translateX(-50%) scale(1);
+  }
+
+  button {
+    margin-top: 15px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 18px;
+    background: #111;
+    color: white;
+    font-size: 18px;
+  }
+
+  .angry {
+    animation: angry .25s infinite alternate;
+  }
+
+  @keyframes angry {
+    from { transform: translateX(42vw) rotate(-8deg); }
+    to { transform: translateX(42vw) rotate(8deg); }
+  }
+
+  .fall {
+    transform: translateY(80vh) rotate(720deg);
+    opacity: .7;
+  }
+
+  .slide {
+    transform: translateX(120vw);
+  }
+
+  .crazy-bg {
+    animation: bg 1s infinite;
+  }
+
+  @keyframes bg {
+    0% { background: #000; }
+    25% { background: #2b0055; }
+    50% { background: #003333; }
+    75% { background: #550000; }
+    100% { background: #000; }
+  }
+
+  #box {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    font-size: 90px;
+    transition: .8s;
+    z-index: 4;
+  }
+
+  #box.show {
+    transform: translateX(-50%) scale(1);
+  }
+
+  .kitten {
+    position: absolute;
+    font-size: 42px;
+    z-index: 20;
+    animation: walk linear infinite;
+  }
+
+  @keyframes walk {
+    from { transform: translateX(-80px); }
+    to { transform: translateX(110vw); }
+  }
+
+  .bubble {
+    position: absolute;
+    background: white;
+    color: black;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    z-index: 30;
+    animation: pop 1s forwards;
+  }
+
+  @keyframes pop {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-40px); }
+  }
+</style>
+</head>
+
+<body>
+<div id="app">
+  <div id="status">Conectando...</div>
+
+  <h1 id="title">El gato invade tu celular</h1>
+
+  <div id="cat" class="cat">🐈</div>
+
+  <div id="notification">
+    <h2>📱 Michi quiere atención</h2>
+    <button id="ignoreBtn">Ignorar</button>
+  </div>
+
+  <div id="box">📦</div>
+</div>
+
+<script>
+  const app = document.getElementById("app");
+  const statusText = document.getElementById("status");
+  const cat = document.getElementById("cat");
+  const notification = document.getElementById("notification");
+  const ignoreBtn = document.getElementById("ignoreBtn");
+  const title = document.getElementById("title");
+  const box = document.getElementById("box");
+
+  const sounds = ["Miau", "Purrr", "No", "Mrrr", "Miau miau"];
+
+  function speak(text) {
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "es-MX";
+    msg.pitch = 1.7;
+    msg.rate = 1.1;
+    speechSynthesis.speak(msg);
+  }
+
+  function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function startStory() {
+    await wait(1800);
+    statusText.style.display = "none";
+
+    cat.classList.add("sit");
+
+    await wait(2200);
+    speak("Miau");
+
+    await wait(900);
+    notification.classList.add("show");
+  }
+
+  ignoreBtn.addEventListener("click", async () => {
+    speak("Miau");
+
+    cat.classList.add("angry");
+    notification.classList.remove("show");
+
+    await wait(700);
+    title.classList.add("fall");
+
+    await wait(700);
+    ignoreBtn.classList.add("slide");
+    app.classList.add("crazy-bg");
+
+    await wait(1000);
+    speak("Miau");
+
+    await wait(800);
+    box.classList.add("show");
+
+    await wait(1200);
+    cat.style.transition = "1s";
+    cat.style.left = "50%";
+    cat.style.bottom = "95px";
+    cat.style.transform = "translateX(-50%) scale(.7)";
+
+    await wait(1200);
+    cat.style.display = "none";
+    app.classList.remove("crazy-bg");
+
+    await wait(5000);
+    kittenExplosion();
+  });
+
+  function kittenExplosion() {
+    speak("Miau miau miau");
+
+    for (let i = 0; i < 24; i++) {
+      const kitten = document.createElement("div");
+      kitten.className = "kitten";
+      kitten.textContent = Math.random() > 0.5 ? "🐈" : "🐱";
+
+      kitten.style.top = Math.random() * 85 + "vh";
+      kitten.style.left = "-80px";
+      kitten.style.animationDuration = 3 + Math.random() * 5 + "s";
+      kitten.style.animationDelay = Math.random() * 2 + "s";
+
+      kitten.addEventListener("click", e => {
+        const word = sounds[Math.floor(Math.random() * sounds.length)];
+        speak(word);
+        showBubble(word, e.clientX, e.clientY);
+      });
+
+      app.appendChild(kitten);
+    }
+  }
+
+  function showBubble(text, x, y) {
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.textContent = text;
+    bubble.style.left = x + "px";
+    bubble.style.top = y + "px";
+
+    app.appendChild(bubble);
+
+    setTimeout(() => {
+      bubble.remove();
+    }, 1000);
+  }
+
+  startStory();
+</script>
+</body>
+</html>
