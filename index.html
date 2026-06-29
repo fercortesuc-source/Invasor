@@ -184,37 +184,36 @@
   z-index: 80;
 }
 
-#realCat {
-  position: absolute;
-  left: 50%;
-  top: 42%;
-  transform: translate(-50%, -50%) scale(0);
-  width: 140px;
-  z-index: 90;
-  transition: 1s;
+#bmwScene{
+
+position:fixed;
+
+top:50%;
+
+left:50%;
+
+transform:translate(-50%,-50%) scale(.8);
+
+width:92vw;
+
+max-width:900px;
+
+opacity:0;
+
+transition:1s;
+
+z-index:999;
+
+pointer-events:none;
+
 }
 
-#bmw {
-  position: absolute;
-  left: -380px;
-  bottom: 80px;
-  width: 340px;
-  z-index: 70;
-  transition: 2s ease;
-}
+#bmwScene.show{
 
-#realCat.show {
-  transform: translate(-50%, -50%) scale(1);
-}
+opacity:1;
 
-#bmw.show {
-  left: 50%;
-  transform: translateX(-50%);
-}
+transform:translate(-50%,-50%) scale(1);
 
-#bmw.drive {
-  left: 120vw;
-  transform: translateX(0);
 }
 </style>
 </head>
@@ -235,8 +234,7 @@
   <div id="box">📦</div>
   <button id="attentionBtn">Darle atención</button>
 
-  <img id="realCat" src="gato.png" />
-  <img id="bmw" src="bmw-e32.png" />
+  <img id="bmwScene" src="gato_bmw.png" />
   </div>
 
 <script>
@@ -248,8 +246,7 @@
   const title = document.getElementById("title");
   const box = document.getElementById("box");
   const attentionBtn = document.getElementById("attentionBtn");
-  const realCat = document.getElementById("realCat");
-  const bmw = document.getElementById("bmw");
+  const bmwScene = document.getElementById("bmwScene");
  
   const sounds = ["Miau", "Purrr", "No", "Mrrr", "Miau miau"];
 
@@ -309,65 +306,94 @@
     app.classList.remove("crazy-bg");
   });
 
- attentionBtn.addEventListener("click", async () => {
-  attentionBtn.style.display = "none";
+attentionBtn.addEventListener("click", async () => {
 
-  box.style.animation = "shake .2s infinite";
-  speak("Miau");
+    attentionBtn.style.display="none";
 
-  await wait(1200);
+    box.style.animation="shake .15s infinite";
 
-  box.style.display = "none";
-  realCat.classList.add("show");
+    speak("MIAAAAU");
 
-  await wait(1000);
+    await wait(1500);
 
-  bmw.classList.add("show");
-  speak("Miau");
+    box.style.display="none";
 
-  await wait(1800);
+    box.style.animation="";
 
-  realCat.style.top = "62%";
-  realCat.style.left = "50%";
-  realCat.style.width = "90px";
-  speak("Purrr");
+    // aparece el gato manejando
 
-  await wait(1000);
+    bmwScene.classList.add("show");
 
-  bmw.classList.add("drive");
-  realCat.style.left = "120vw";
+    speak("Purrr");
 
-  await wait(2500);
+    await wait(4000);
 
-  catParty();
-  kittenExplosion();
+    bmwScene.classList.remove("show");
+
+    await wait(700);
+
+    catParty();
+
+    kittenExplosion();
+
 });
 
- function catParty() {
-  const maullidos = ["Miau", "Miau", "Miauuu", "Purrr", "Miau", "Miauuuu"];
+function catParty(){
 
-  let i = 0;
+const sonidos=[
 
-  const intervalo = setInterval(() => {
-    speak(maullidos[i]);
-    i++;
+"MIAU",
 
-    if (i >= maullidos.length) {
-      clearInterval(intervalo);
-    }
-  }, 600);
+"MIAAAU",
+
+"Miauu",
+
+"Purrr",
+
+"MIAU",
+
+"Miau",
+
+"MIAAAAAUUUU",
+
+"Purrrrr",
+
+"MIAU"
+
+];
+
+let contador=0;
+
+const intervalo=setInterval(()=>{
+
+speak(
+
+sonidos[Math.floor(Math.random()*sonidos.length)]
+
+);
+
+contador++;
+
+if(contador>=60){
+
+clearInterval(intervalo);
+
+}
+
+},180);
+
 }
   function kittenExplosion() {
     speak("Miau miau miau");
 
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 150; i++) {
       const kitten = document.createElement("div");
       kitten.className = "kitten";
       kitten.textContent = Math.random() > 0.5 ? "🐈" : "🐱";
 
       kitten.style.top = Math.random() * 85 + "vh";
       kitten.style.left = "-80px";
-      kitten.style.animationDuration = 3 + Math.random() * 5 + "s";
+      kitten.style.animationDuration = 1 + Math.random()*2+"s";
       kitten.style.animationDelay = Math.random() * 2 + "s";
 
       kitten.addEventListener("click", e => {
