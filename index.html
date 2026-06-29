@@ -160,6 +160,62 @@
     from { opacity: 1; transform: translateY(0); }
     to { opacity: 0; transform: translateY(-40px); }
   }
+
+ @keyframes shake {
+  0% { transform: translateX(-50%) rotate(0deg); }
+  25% { transform: translateX(-50%) rotate(6deg); }
+  50% { transform: translateX(-50%) rotate(-6deg); }
+  75% { transform: translateX(-50%) rotate(6deg); }
+  100% { transform: translateX(-50%) rotate(0deg); }
+}
+
+ #attentionBtn {
+  position: absolute;
+  left: 50%;
+  top: 72%;
+  transform: translateX(-50%);
+  display: none;
+  padding: 16px 28px;
+  border: none;
+  border-radius: 24px;
+  background: white;
+  color: black;
+  font-size: 20px;
+  z-index: 80;
+}
+
+#realCat {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 140px;
+  z-index: 90;
+  transition: 1s;
+}
+
+#bmw {
+  position: absolute;
+  left: -380px;
+  bottom: 80px;
+  width: 340px;
+  z-index: 70;
+  transition: 2s ease;
+}
+
+#realCat.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+#bmw.show {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#bmw.drive {
+  left: 120vw;
+  transform: translateX(0);
+}
 </style>
 </head>
 
@@ -177,7 +233,11 @@
   </div>
 
   <div id="box">📦</div>
-</div>
+  <button id="attentionBtn">Darle atención</button>
+
+  <img id="realCat" src="gato.png" />
+  <img id="bmw" src="bmw-e32.png" />
+  </div>
 
 <script>
   const app = document.getElementById("app");
@@ -187,7 +247,10 @@
   const ignoreBtn = document.getElementById("ignoreBtn");
   const title = document.getElementById("title");
   const box = document.getElementById("box");
-
+  const attentionBtn = document.getElementById("attentionBtn");
+  const realCat = document.getElementById("realCat");
+  const bmw = document.getElementById("bmw");
+ 
   const sounds = ["Miau", "Purrr", "No", "Mrrr", "Miau miau"];
 
   function speak(text) {
@@ -233,6 +296,7 @@
 
     await wait(800);
     box.classList.add("show");
+    attentionBtn.style.display = "block";
 
     await wait(1200);
     cat.style.transition = "1s";
@@ -243,11 +307,56 @@
     await wait(1200);
     cat.style.display = "none";
     app.classList.remove("crazy-bg");
-
-    await wait(5000);
-    kittenExplosion();
   });
 
+ attentionBtn.addEventListener("click", async () => {
+  attentionBtn.style.display = "none";
+
+  box.style.animation = "shake .2s infinite";
+  speak("Miau");
+
+  await wait(1200);
+
+  box.style.display = "none";
+  realCat.classList.add("show");
+
+  await wait(1000);
+
+  bmw.classList.add("show");
+  speak("Miau");
+
+  await wait(1800);
+
+  realCat.style.top = "62%";
+  realCat.style.left = "50%";
+  realCat.style.width = "90px";
+  speak("Purrr");
+
+  await wait(1000);
+
+  bmw.classList.add("drive");
+  realCat.style.left = "120vw";
+
+  await wait(2500);
+
+  catParty();
+  kittenExplosion();
+});
+
+ function catParty() {
+  const maullidos = ["Miau", "Miau", "Miauuu", "Purrr", "Miau", "Miauuuu"];
+
+  let i = 0;
+
+  const intervalo = setInterval(() => {
+    speak(maullidos[i]);
+    i++;
+
+    if (i >= maullidos.length) {
+      clearInterval(intervalo);
+    }
+  }, 600);
+}
   function kittenExplosion() {
     speak("Miau miau miau");
 
